@@ -11,6 +11,8 @@ curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/
 ```
 
 Check ```terraform --version```
+
+
 In **index.tf** - information about which VM we should get as a result is described
 provider = indicate in which cloud environment we will work ([All providers by link](https://registry.terraform.io/browse/providers)) 
 resource = infrastructure description - network, machine type, region, etc
