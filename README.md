@@ -39,3 +39,8 @@ terraform plan
 ```
 terraform apply
 ```
+
+# **Ansible**
+
+In **inventory.ini** we have information with IP to our VM and path to our ssh open key
+**playbook.yml** have tasks for intall docker and docker compose, additionall packages and creation new "deploy" user with nessesary permissions to work with docker command 
