@@ -1,0 +1,63 @@
+---
+- name: Install Docker and Docker Compose
+  hosts: all
+  become: true
+  vars:
+    container_count: 4
+    container_name: "docker"
+    container_image: "ubuntu"
+    container_command: "sleep 1"
+
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: yes
+
+    - name: Install required system packages
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python3-pip
+        - virtualenv
+        - python3-setuptools
+
+    - name: Add Docker Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Update docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: yes
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Pull image
+      community.docker.docker_image:
+        name: "{{ container_image }}"
+        source: pull
+
+    - name: Create default containers
+      community.docker.docker_container:
+        name: "{{ container_name }}{{ item }}"
+        image: "{{ container_image }}"
+        command: "{{ container_command }}"
+        state: present
+      with_sequence: start=1 end={{ container_count }}
