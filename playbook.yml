@@ -49,6 +49,29 @@
       pip:
         name: docker
 
+    - name: Install docker-compose
+      apt:
+        name: docker-compose
+        state: latest
+        update_cache: yes
+
+    - name: Create "deploy" user
+      user:
+        name: deploy
+        state: present
+
+    - name: Add "deploy" user to the "docker" group
+      user:
+        name: deploy
+        groups: docker
+        append: yes
+
+    - name: Set permissions for the "deploy" user to run Docker
+      lineinfile:
+        path: /etc/sudoers
+        line: "deploy ALL=(ALL) NOPASSWD: /usr/bin/docker"
+
+
     - name: Pull image
       community.docker.docker_image:
         name: "{{ container_image }}"
